@@ -1,0 +1,3205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fed's Portfolio</title>
+  <link rel="icon" type="image/x-icon" href="images/gengar.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/421bfca03c.js" crossorigin="anonymous"></script>
+  <script>
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark" || saved === "light") document.documentElement.dataset.theme = saved;
+    } catch (error) {}
+  </script>
+  <style>
+@property --glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 1);
+}
+
+@property --glow-soft {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 1);
+}
+
+@property --glow-gif {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 1);
+}
+
+@property --glow-bar {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 1);
+}
+
+@property --glow-sheet {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 1);
+}
+
+@property --hard {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(0, 0, 0, 1);
+}
+
+:root {
+  --frame-w: min(100vw, 177.7778vh);
+  --u: calc(var(--frame-w) / 1920);
+  --ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --move: 0.85s;
+  --bar: calc(121.5 * var(--u));
+  --cv-bar-h: clamp(36px, 11vh, 72px);
+  --cv-pad-x: clamp(12px, 3vw, 24px);
+  --text: #414141;
+  --check-a: #e4e9f4;
+  --check-b: #f7f9fd;
+  --sweep: #414141;
+  --paper: #fff;
+  --ink: #000;
+  --bubble-text: #000;
+  --glow: rgba(0, 0, 0, 1);
+  --glow-soft: rgba(0, 0, 0, 0.8);
+  --glow-gif: rgba(0, 0, 0, 0.5);
+  --glow-bar: rgba(0, 0, 0, 0.6);
+  --glow-sheet: rgba(0, 0, 0, 0.45);
+  --hard: rgba(0, 0, 0, 0.28);
+}
+
+:root {
+  transition: --glow 0.5s ease, --glow-soft 0.5s ease, --glow-gif 0.5s ease, --glow-bar 0.5s ease, --glow-sheet 0.5s ease, --hard 0.5s ease;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --text: #fff;
+  --check-a: #242424;
+  --check-b: #2e2e2e;
+  --sweep: #8f8f8f;
+  --paper: #333;
+  --ink: #000;
+  --bubble-text: #fff;
+  --glow: rgba(255, 255, 255, 0.9);
+  --glow-soft: rgba(255, 255, 255, 0.7);
+  --glow-gif: rgba(255, 255, 255, 0.5);
+  --glow-bar: rgba(255, 255, 255, 0.45);
+  --glow-sheet: rgba(255, 255, 255, 0.35);
+  --hard: rgba(255, 255, 255, 0.22);
+}
+* {
+  color: var(--text);
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Pixelify Sans", sans-serif;
+  letter-spacing: 2px;
+  background: conic-gradient(var(--check-a) 90deg, var(--check-b) 90deg 180deg, var(--check-a) 180deg 270deg, var(--check-b) 270deg) 0 0 / 6rem 6rem;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: conic-gradient(var(--sweep) 90deg, transparent 90deg 180deg, var(--sweep) 180deg 270deg, transparent 270deg) 0 0 / 6rem 6rem;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+body.pulse::before {
+  animation: sweep 1.05s ease-in-out;
+}
+
+@keyframes sweep {
+  from {
+    opacity: 1;
+    -webkit-mask-position: var(--from);
+    mask-position: var(--from);
+  }
+  to {
+    opacity: 1;
+    -webkit-mask-position: var(--to);
+    mask-position: var(--to);
+  }
+}
+
+body[data-sweep="lr"]::before {
+  --from: 100% 50%;
+  --to: 0% 50%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(90deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+}
+
+body[data-sweep="rl"]::before {
+  --from: 0% 50%;
+  --to: 100% 50%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(90deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+}
+
+body[data-sweep="tb"]::before {
+  --from: 50% 100%;
+  --to: 50% 0%;
+  -webkit-mask-image: linear-gradient(180deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(180deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 100% 300%;
+  mask-size: 100% 300%;
+}
+
+body[data-sweep="bt"]::before {
+  --from: 50% 0%;
+  --to: 50% 100%;
+  -webkit-mask-image: linear-gradient(180deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(180deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 100% 300%;
+  mask-size: 100% 300%;
+}
+
+body[data-sweep="tlbr"]::before {
+  --from: 100% 100%;
+  --to: 0% 0%;
+  -webkit-mask-image: linear-gradient(135deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(135deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 300% 300%;
+  mask-size: 300% 300%;
+}
+
+body[data-sweep="brtl"]::before {
+  --from: 0% 0%;
+  --to: 100% 100%;
+  -webkit-mask-image: linear-gradient(135deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(135deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 300% 300%;
+  mask-size: 300% 300%;
+}
+
+body[data-sweep="bltr"]::before {
+  --from: 100% 0%;
+  --to: 0% 100%;
+  -webkit-mask-image: linear-gradient(45deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  mask-image: linear-gradient(45deg, transparent 35%, #8f8f8f 45%, #8f8f8f 55%, transparent 65%);
+  -webkit-mask-size: 300% 300%;
+  mask-size: 300% 300%;
+}
+
+body[data-sweep="trbl"]::before {
+  --from: 0% 100%;
+  --to: 100% 0%;
+  -webkit-mask-image: linear-gradient(45deg, transparent 35%, #414141 45%, #414141 55%, transparent 65%);
+  mask-image: linear-gradient(45deg, transparent 35%, #414141 45%, #414141 55%, transparent 65%);
+  -webkit-mask-size: 300% 300%;
+  mask-size: 300% 300%;
+}
+
+.frame {
+  position: absolute;
+  top: calc(50% - var(--frame-w) * 9 / 32);
+  left: calc(50% - var(--frame-w) / 2);
+  width: var(--frame-w);
+  aspect-ratio: 16 / 9;
+}
+
+.menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--u) * 215);
+  text-align: center;
+  z-index: 2;
+  transition: opacity 0.3s ease, transform 0.45s var(--ease);
+}
+
+.gif-darkrai {
+  position: absolute;
+  left: calc(var(--u) * 893);
+  top: calc(var(--u) * 77);
+  width: calc(var(--u) * 267);
+  height: auto;
+  z-index: 2;
+  transition: opacity 0.25s ease;
+  filter: drop-shadow(15px 5px 10px var(--glow-soft));
+}
+
+.is-menu .gif-darkrai {
+  opacity: 0;
+}
+
+.title {
+  position: relative;
+  margin: 0;
+  font-size: calc(var(--u) * 140 * var(--title-fit, 1));
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: calc(var(--u) * 2);
+  text-shadow: calc(var(--u) * -10) calc(var(--u) * 5) calc(var(--u) * 15) rgb(78, 78, 78);
+  white-space: nowrap;
+}
+
+.title .typed,
+.page-title .typed {
+  position: relative;
+}
+
+.title .typed::after,
+.page-title .typed::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: -0.02em;
+  width: calc(var(--u) * 7);
+  height: 1em;
+  background: var(--text);
+  animation: caret 0.6s steps(1) infinite;
+}
+
+.title .rest,
+.page-title .rest {
+  visibility: hidden;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.start {
+  font-size: calc(var(--u) * 46);
+  font-weight: 400;
+  color: #ff0000;
+  text-decoration: none;
+  white-space: nowrap;
+  animation: fade 2s ease-in-out infinite;
+}
+
+.start:hover {
+  font-weight: 700;
+}
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.shape-shadow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 calc(var(--u) * 25) var(--glow));
+  z-index: 1;
+}
+
+.shape {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  clip-path: polygon(
+    calc(50vw + 45 * var(--u) - 4.1944 * (50vh - 540 * var(--u))) 0,
+    100vw 0,
+    100vw 100vh,
+    calc(50vw + 65 * var(--u) - 3.9364 * (50vh - 540 * var(--u))) 100vh,
+    calc(50vw + 498 * var(--u)) calc(50vh + 430 * var(--u)),
+    calc(50vw + 498 * var(--u)) calc(50vh - 432 * var(--u))
+  );
+  transition: clip-path var(--move) var(--ease);
+}
+
+.shape-page {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  clip-path: polygon(0 0, 100vw 0, 100vw 100vh, calc(100vw - var(--bar)) 100vh, calc(100vw - var(--bar)) var(--bar), 0 var(--bar));
+  transform: scale(0);
+  transform-origin: 100% 0;
+  transition: transform var(--move) var(--ease);
+}
+
+.page-skills .shape-page {
+  clip-path: polygon(100vw 0, 100vw 100vh, 0 100vh, 0 calc(100vh - var(--bar)), calc(100vw - var(--bar)) calc(100vh - var(--bar)), calc(100vw - var(--bar)) 0);
+  transform-origin: 100% 100%;
+}
+
+.page-education .shape-page {
+  clip-path: polygon(0 0, 100vw 0, 100vw var(--bar), var(--bar) var(--bar), var(--bar) 100vh, 0 100vh);
+  transform-origin: 0 0;
+}
+
+.page-projects .shape-page {
+  clip-path: polygon(0 0, var(--bar) 0, var(--bar) calc(100vh - var(--bar)), 100vw calc(100vh - var(--bar)), 100vw 100vh, 0 100vh);
+  transform-origin: 0 100%;
+}
+
+.ring {
+  position: fixed;
+  left: calc(50vw + 116 * var(--u) + 2px);
+  top: calc(50vh - 348 * var(--u) + 2px);
+  width: calc(744 * var(--u) - 4px);
+  height: calc(696 * var(--u) - 4px);
+  border-radius: 50%;
+  background: #000;
+  transition: left var(--move) var(--ease), top var(--move) var(--ease), width var(--move) var(--ease), height var(--move) var(--ease);
+  z-index: 1;
+}
+
+.profile-pic {
+  position: fixed;
+  left: calc(50vw + 180 * var(--u));
+  top: calc(50vh - 291 * var(--u));
+  width: calc(616 * var(--u));
+  height: calc(580 * var(--u));
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: inset 0 0 calc(var(--u) * 25) var(--glow);
+  transition: left var(--move) var(--ease), top var(--move) var(--ease), width var(--move) var(--ease), height var(--move) var(--ease);
+  z-index: 3;
+}
+
+.profile-pic img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.25s ease 0.15s;
+}
+
+.profile-pic .pic-home {
+  opacity: 1;
+}
+
+.page {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.page-title {
+  margin: calc(var(--y) * var(--u)) 0 0 calc(var(--x) * var(--u));
+  font-size: calc(var(--u) * 125);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.page-text {
+  flex: none;
+  width: calc(var(--w, 1560) * var(--u));
+  margin: calc(var(--gap) * var(--u)) 0 0 calc(var(--x) * var(--u));
+  font-size: calc(var(--u) * 29.5);
+  letter-spacing: 0;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 24));
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.page-text.bio {
+  width: var(--bio-w, calc(100vw - var(--bar) - (var(--x) + 124) * var(--u)));
+  font-size: calc(var(--u) * 34);
+  line-height: 1.65;
+  text-align: justify;
+}
+.page-text.bio span {
+  animation: me 1s linear infinite alternate;
+}
+@keyframes me {
+  from {
+    color: #ff0000;
+  }
+  to {
+    color: #ffffff;
+  }
+}
+
+.icons {
+  position: relative;
+  align-self: flex-start;
+  display: flex;
+  justify-content: space-evenly;
+  margin: calc(var(--u) * 70) 0 0 calc(var(--x) * var(--u));
+  padding: calc(var(--u) * 17) calc(var(--u) * 12);
+  border: 2px solid var(--ink);
+  border-radius: 50px;
+  background-color: #68686855;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 24));
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.page-ready .page.active .icons {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s ease 0.15s, transform 0.55s var(--ease) 0.15s;
+}
+
+.icons a {
+  padding: 0 calc(var(--u) * 20);
+  color: white;
+  font-size: calc(var(--u) * 36);
+  text-decoration: none;
+}
+
+.icons a:hover {
+  transition: all 0.35s;
+  transform: scale(1.2);
+}
+
+.fa-facebook:hover {
+  color: #1877f2;
+}
+
+.fa-youtube:hover {
+  color: #ff0000;
+}
+
+.fa-discord:hover {
+  color: #5865f2;
+}
+
+.fa-twitter:hover {
+  color: #1da1f2;
+}
+
+.fa-github:hover {
+  color: #000000;
+}
+
+.fa-steam:hover {
+  color: #2a475e;
+}
+
+.fa-spotify:hover {
+  color: #1ed760;
+}
+
+.fa-xbox:hover {
+  color: #107c10;
+}
+
+.fa-windows:hover {
+  color: #1ec8ea;
+}
+
+.skills {
+  --bubble-edge: 24px;
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+  margin: 0 var(--bar) var(--bar) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 24));
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.page-ready .page.active .skills,
+.page-ready .page.active .edu,
+.page-ready .page.active .proj {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s ease 0.1s, transform 0.55s var(--ease) 0.1s;
+}
+
+.skills-stage {
+  position: relative;
+  width: calc(var(--u) * 1000);
+  height: calc(var(--u) * 560);
+}
+
+.skill-group,
+.edu-slide,
+.proj-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.45s var(--ease), visibility 0s linear 0.45s;
+}
+
+.skill-group[data-state="before"],
+.edu-slide[data-state="before"],
+.proj-slide[data-state="before"] {
+  transform: translateX(calc(var(--u) * -140));
+}
+
+.skill-group[data-state="after"],
+.edu-slide[data-state="after"],
+.proj-slide[data-state="after"] {
+  transform: translateX(calc(var(--u) * 140));
+}
+
+.skill-group[data-state="active"],
+.edu-slide[data-state="active"],
+.proj-slide[data-state="active"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.3s ease 0.1s, transform 0.45s var(--ease) 0.1s, visibility 0s;
+}
+
+.skill-title {
+  margin: 0;
+  height: calc(var(--u) * 70);
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--u) * 44);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.skill-list {
+  display: flex;
+  justify-content: center;
+  gap: calc(var(--u) * 200);
+  margin-top: calc(var(--u) * 50);
+}
+
+.skill {
+  position: relative;
+  width: calc(var(--u) * 340);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+}
+
+.skill img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  transition: transform 0.15s var(--ease);
+  pointer-events: auto;
+}
+
+.skill figcaption {
+  margin-top: calc(var(--u) * 22);
+  font-size: calc(var(--u) * 30);
+  line-height: 1;
+}
+
+.bubble {
+  position: absolute;
+  top: calc(var(--u) * -20);
+  right: calc(100% + var(--u) * 6);
+  z-index: 3;
+  box-sizing: border-box;
+  width: calc(var(--u) * 340);
+  margin: 0;
+  padding: calc(var(--u) * 22) calc(var(--u) * 26);
+  border: calc(var(--u) * 8) solid var(--ink);
+  background: var(--paper);
+  box-shadow: calc(var(--u) * 10) calc(var(--u) * 10) 0 var(--hard);
+  color: var(--bubble-text);
+  font-size: calc(var(--u) * 22);
+  line-height: 1.5;
+  letter-spacing: 1px;
+  text-align: left;
+  translate: var(--shift, 0px) 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.4) translateX(calc(var(--u) * 30));
+  transform-origin: right 62%;
+  transition: opacity 0.15s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  top: 62%;
+  right: calc(var(--u) * -17);
+  box-sizing: border-box;
+  width: calc(var(--u) * 34);
+  height: calc(var(--u) * 34);
+  border-top: calc(var(--u) * 8) solid var(--ink);
+  border-right: calc(var(--u) * 8) solid var(--ink);
+  background: var(--paper);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.skill[data-side="right"] .bubble {
+  right: auto;
+  left: calc(100% + var(--u) * 6);
+  transform: scale(0.4) translateX(calc(var(--u) * -30));
+  transform-origin: left 62%;
+}
+
+.skill[data-side="right"] .bubble::after {
+  right: auto;
+  left: calc(var(--u) * -17);
+  border-top: 0;
+  border-right: 0;
+  border-bottom: calc(var(--u) * 8) solid var(--ink);
+  border-left: calc(var(--u) * 8) solid var(--ink);
+}
+
+.skill[data-side="top"] .bubble {
+  top: auto;
+  right: auto;
+  bottom: calc(100% + var(--u) * 24);
+  left: 50%;
+  transform: translateX(-50%) scale(0.4);
+  transform-origin: 50% 100%;
+}
+
+.skill[data-side="top"] .bubble::after {
+  top: auto;
+  right: auto;
+  bottom: calc(var(--u) * -17);
+  left: 50%;
+  border-top: 0;
+  border-right: calc(var(--u) * 8) solid var(--ink);
+  border-bottom: calc(var(--u) * 8) solid var(--ink);
+  transform: translateX(-50%) rotate(45deg);
+  translate: calc(-1 * var(--shift, 0px)) 0;
+}
+
+.skill:hover img,
+.skill:focus-visible img {
+  transform: translateY(calc(var(--u) * -10)) scale(1.04);
+}
+
+.skill:hover .bubble,
+.skill:focus-visible .bubble {
+  opacity: 1;
+  transform: none;
+}
+
+.skill[data-side="top"]:hover .bubble,
+.skill[data-side="top"]:focus-visible .bubble {
+  transform: translateX(-50%);
+}
+
+.skills-arrow,
+.edu-arrow {
+  position: absolute;
+  top: 0;
+  width: calc(var(--u) * 66);
+  height: calc(var(--u) * 56);
+  padding: 0;
+  border: 0;
+  background: var(--img) center / contain no-repeat;
+  filter: var(--filter, none);
+  transform: scaleX(var(--flip, 1));
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease-out;
+}
+
+.skills-arrow.prev {
+  left: 0;
+}
+
+.skills-arrow.next {
+  right: 0;
+}
+
+.skills-arrow:hover,
+.skills-arrow:focus-visible,
+.edu-arrow:hover,
+.edu-arrow:focus-visible {
+  transform: scale(calc(1.15 * var(--flip, 1)), 1.15);
+  outline: none;
+}
+
+.skills-arrow.off,
+.edu-arrow.off {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.edu {
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+  margin: 0 0 0 var(--bar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 24));
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.edu-stage {
+  position: relative;
+  width: calc(var(--u) * 1300);
+  height: calc(var(--u) * 640);
+}
+
+.edu-years {
+  margin: 0;
+  height: calc(var(--u) * 56);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 14);
+  font-size: calc(var(--u) * 40);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.edu-photo {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: calc(var(--u) * 760);
+  height: calc(var(--u) * 390);
+  margin-top: calc(var(--u) * 14);
+  padding: calc(var(--u) * 30) calc(var(--u) * 75);
+  background: #000;
+  box-shadow: calc(var(--u) * 10) calc(var(--u) * 10) 0 var(--hard);
+  transition: transform 0.15s var(--ease);
+}
+
+.edu-photo[href]:hover,
+.edu-photo[href]:focus-visible {
+  transform: translateY(calc(var(--u) * -8));
+  outline: none;
+}
+
+.edu-photo .bubble {
+  top: auto;
+  right: auto;
+  bottom: calc(100% - var(--u) * 30);
+  left: calc(100% - var(--u) * 150);
+  width: calc(var(--u) * 380);
+  transform: scale(0.4) translateY(calc(var(--u) * 30));
+  transform-origin: 12% 100%;
+}
+
+.edu-photo .bubble::after {
+  top: auto;
+  right: auto;
+  bottom: calc(var(--u) * -17);
+  left: calc(var(--u) * 50);
+  border-top: 0;
+  border-right: calc(var(--u) * 8) solid var(--ink);
+  border-bottom: calc(var(--u) * 8) solid var(--ink);
+  transform: rotate(45deg);
+}
+
+.edu-photo[href]:hover .bubble,
+.edu-photo[href]:focus-visible .bubble {
+  opacity: 1;
+  transform: none;
+}
+
+.edu-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.edu-school {
+  margin: calc(var(--u) * 26) 0 0;
+  font-size: calc(var(--u) * 40);
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.edu-detail {
+  margin: calc(var(--u) * 8) 0 0;
+  font-size: calc(var(--u) * 28);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.edu-arrow {
+  top: calc(var(--u) * 237);
+}
+
+.edu-arrow.prev {
+  left: calc(50% - var(--u) * 596);
+}
+
+.edu-arrow.next {
+  right: calc(50% - var(--u) * 596);
+}
+
+
+/* ---------- Projects: flip cards ---------- */
+.proj {
+  flex: 1;
+  align-self: stretch;
+  min-height: 0;
+  margin: 0 0 0 var(--bar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 24));
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.proj-stage {
+  position: relative;
+  width: calc(var(--u) * 1300);
+  height: calc(var(--u) * 640);
+}
+
+.proj-slide {
+  justify-content: flex-start;
+}
+
+.proj-card {
+  position: relative;
+  width: calc(var(--u) * 848);
+  height: calc(var(--u) * 444);
+  perspective: calc(var(--u) * 1800);
+  cursor: pointer;
+  outline: none;
+}
+
+.proj-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.proj-card.flipped .proj-inner {
+  transform: rotateY(-180deg);
+}
+
+.proj-card:focus-visible .proj-face {
+  outline: calc(var(--u) * 4) solid #fff200;
+  outline-offset: calc(var(--u) * 4);
+}
+
+.proj-face {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: calc(var(--u) * 27);
+  background: #000;
+  box-shadow: calc(var(--u) * 10) calc(var(--u) * 10) 0 var(--hard);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.proj-back {
+  transform: rotateY(180deg);
+}
+
+.proj-screen {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.proj-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.proj-screen.soon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--u) * 44);
+  font-weight: 600;
+}
+
+.proj-info {
+  padding: calc(var(--u) * 14) calc(var(--u) * 24) calc(var(--u) * 14);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.proj-row {
+  margin: 0;
+  box-sizing: border-box;
+  padding: calc(var(--u) * 8) 0;
+  font-size: calc(var(--u) * 25);
+  letter-spacing: calc(var(--u) * 1);
+  line-height: 1.35;
+  border-bottom: calc(var(--u) * 2) solid var(--text);
+}
+
+.proj-row b {
+  font-weight: 700;
+  margin-right: calc(var(--u) * 10);
+}
+
+.proj-row.name {
+  flex: 0 0 auto;
+  padding-top: calc(var(--u) * 14);
+}
+
+.proj-row.desc {
+  flex: 1.7;
+}
+
+.proj-row.app {
+  flex: 1.3;
+}
+
+.proj-row.status {
+  flex: 1;
+  border-bottom: 0;
+}
+
+.proj-row span {
+  display: block;
+}
+
+.proj-row.name b {
+  margin-right: calc(var(--u) * 10);
+}
+
+.proj-name {
+  margin: calc(var(--u) * 44) 0 0;
+  font-size: calc(var(--u) * 44);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.proj-card .bubble {
+  top: auto;
+  right: auto;
+  bottom: calc(100% - var(--u) * 30);
+  left: calc(100% - var(--u) * 150);
+  width: max-content;
+  white-space: nowrap;
+  transform: scale(0.4) translateY(calc(var(--u) * 30));
+  transform-origin: 12% 100%;
+}
+
+.proj-card .bubble::after {
+  top: auto;
+  right: auto;
+  bottom: calc(var(--u) * -17);
+  left: calc(var(--u) * 50);
+  border-top: 0;
+  border-right: calc(var(--u) * 8) solid var(--ink);
+  border-bottom: calc(var(--u) * 8) solid var(--ink);
+  transform: rotate(45deg);
+}
+
+:root[data-theme="dark"] .proj-card .bubble,
+:root[data-theme="dark"] .proj-card .bubble::after {
+  background: #fff;
+}
+
+:root[data-theme="dark"] .proj-card .bubble {
+  color: #000;
+}
+
+.proj-card:not(.flipped):hover .bubble {
+  opacity: 1;
+  transform: none;
+}
+
+/* Landing page credit under the title */
+.title-wrap {
+  position: relative;
+}
+
+.title-credit {
+  position: absolute;
+  left: calc(var(--u) * 6);
+  top: calc(100% + var(--u) * 18);
+  margin: 0;
+  font-size: calc(var(--u) * 36 * var(--title-fit, 1));
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: calc(var(--u) * 2);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.title-credit span {
+  display: block;
+  color: #9a9a9a;
+}
+
+:root[data-theme="dark"] .title-credit span {
+  color: #fff;
+}
+
+.edu-arrow.proj-arrow {
+  top: calc(var(--u) * 194);
+}
+
+.edu-arrow.proj-arrow.prev {
+  left: calc(50% - var(--u) * 530);
+}
+
+.edu-arrow.proj-arrow.next {
+  right: calc(50% - var(--u) * 530);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proj-inner { transition-duration: 0.01s !important; }
+}
+
+.options {
+  position: absolute;
+  left: 51%;
+  top: 0;
+  width: 49%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--u) * 45);
+  z-index: 2;
+}
+
+.option {
+  position: relative;
+  width: max-content;
+  opacity: 0;
+  transform: translateX(calc(var(--u) * 140));
+  transition: opacity 0.15s ease, transform 0.25s var(--ease);
+}
+
+.option a {
+  position: relative;
+  display: block;
+  font-size: calc(var(--u) * 90);
+  line-height: 1;
+  text-decoration: none;
+  outline: none;
+  transform-origin: left center;
+  transition: transform 0.15s ease-out;
+}
+
+.option .pointer {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + var(--u) * 28);
+  width: calc(var(--u) * 72);
+  height: calc(var(--u) * 60);
+  margin-top: calc(var(--u) * -30);
+  background: var(--arrow-color, var(--color, #f60000));
+  -webkit-mask: var(--arrow, url("images/right_arrow.png")) center / contain no-repeat;
+  mask: var(--arrow, url("images/right_arrow.png")) center / contain no-repeat;
+  opacity: 0;
+  transform: translateX(calc(var(--u) * -36));
+  transition: opacity 0.15s ease-out, transform 0.15s steps(3, end);
+}
+
+.option .sprite {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + var(--u) * 6);
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * 100);
+  margin-top: calc(var(--u) * -68);
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(calc(var(--u) * -24)) scale(0.6);
+  transform-origin: left center;
+  transition: opacity 0.15s ease-out, transform 0.2s var(--ease);
+}
+
+.option:hover .sprite,
+.option a:focus-visible .sprite {
+  opacity: 1;
+  transform: none;
+}
+
+.option:hover .pointer,
+.option a:focus-visible + .pointer {
+  opacity: 1;
+  transform: none;
+}
+
+.option:hover a,
+.option a:focus-visible {
+  transform: scale(1.12);
+  color: var(--color, #f60000);
+  font-weight: 700;
+}
+
+.back {
+  --back-h: clamp(14px, calc(var(--u) * 34), 24px);
+  --back-w: calc(var(--back-h) * 28 / 24);
+  /* keeps the button centred inside the black bar when the bar gets thin */
+  --back-off: min(24px, calc((var(--bar) - var(--back-h)) / 2));
+  position: fixed;
+  left: var(--back-off);
+  top: var(--back-off);
+  z-index: 5;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  transform-origin: center;
+  transition: opacity 0.15s ease, transform 0.15s ease-out;
+}
+
+body:has(.cv.open) .back {
+  top: calc((var(--cv-bar-h) - var(--back-h)) / 2);
+  left: max(var(--cv-pad-x), env(safe-area-inset-left, 0px));
+}
+
+.back .icon {
+  display: block;
+  width: var(--back-w);
+  height: var(--back-h);
+  background: url("images/left_arrow.png") center / contain no-repeat;
+}
+
+.back:hover,
+.back:focus-visible {
+  transform: scale(1.12);
+  outline: none;
+}
+
+.is-menu .menu {
+  opacity: 0;
+  transform: translateX(calc(var(--u) * -90));
+}
+
+.is-menu .shape {
+  clip-path: polygon(
+    calc(50vw - 45 * var(--u) + 4.1944 * (50vh - 540 * var(--u))) 0,
+    0 0,
+    0 100vh,
+    calc(50vw - 65 * var(--u) + 3.9364 * (50vh - 540 * var(--u))) 100vh,
+    calc(50vw - 498 * var(--u)) calc(50vh + 430 * var(--u)),
+    calc(50vw - 498 * var(--u)) calc(50vh - 432 * var(--u))
+  );
+}
+
+.is-menu .ring {
+  left: calc(50vw - 860 * var(--u) + 2px);
+}
+
+.is-menu .profile-pic {
+  left: calc(50vw - 796 * var(--u));
+}
+
+.is-menu .back {
+  opacity: 1;
+  transition: opacity 0.35s ease 0.95s, transform 0.15s ease-out;
+}
+
+.is-menu .option {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.35s ease calc(0.4s + var(--i) * 0.09s), transform 0.55s var(--ease) calc(0.4s + var(--i) * 0.09s);
+}
+
+.is-page .shape {
+  clip-path: polygon(
+    0 0,
+    0 0,
+    0 100vh,
+    0 100vh,
+    0 calc(50vh + 430 * var(--u)),
+    0 calc(50vh - 432 * var(--u))
+  );
+}
+
+.is-page .shape-page {
+  transform: none;
+}
+
+.is-page .ring {
+  width: calc(280 * var(--u));
+  height: calc(280 * var(--u));
+}
+
+.is-page .profile-pic {
+  width: calc(224 * var(--u));
+  height: calc(224 * var(--u));
+}
+
+.is-page.page-about .ring,
+.is-page.page-skills .ring {
+  left: calc(100vw - 320 * var(--u));
+}
+
+.is-page.page-education .ring,
+.is-page.page-projects .ring {
+  left: calc(40 * var(--u));
+}
+
+.is-page.page-about .ring,
+.is-page.page-education .ring {
+  top: calc(44 * var(--u));
+}
+
+.is-page.page-skills .ring,
+.is-page.page-projects .ring {
+  top: calc(100vh - 324 * var(--u));
+}
+
+.is-page.page-about .profile-pic,
+.is-page.page-skills .profile-pic {
+  left: calc(100vw - 292 * var(--u));
+}
+
+.is-page.page-education .profile-pic,
+.is-page.page-projects .profile-pic {
+  left: calc(68 * var(--u));
+}
+
+.is-page.page-about .profile-pic,
+.is-page.page-education .profile-pic {
+  top: calc(72 * var(--u));
+}
+
+.is-page.page-skills .profile-pic,
+.is-page.page-projects .profile-pic {
+  top: calc(100vh - 296 * var(--u));
+}
+
+.is-page .pic-home {
+  opacity: 0;
+}
+
+.is-page.page-about .pic-about,
+.is-page.page-skills .pic-skills,
+.is-page.page-education .pic-education,
+.is-page.page-projects .pic-projects {
+  opacity: 1;
+}
+
+.page-skills .back .icon {
+  filter: invert(1);
+}
+
+.is-page .option {
+  opacity: 0;
+  transform: translateX(calc(var(--u) * 140));
+  transition: opacity 0.15s ease, transform 0.25s var(--ease);
+}
+
+.is-page .back {
+  animation: back-in 0.35s ease 0.95s both;
+}
+
+.is-page .page.active .page-title {
+  opacity: 1;
+  transition: opacity 0.15s ease 0.75s;
+}
+
+.page-ready .page.active .page-text {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s ease, transform 0.55s var(--ease);
+}
+
+@keyframes back-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.cv {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  visibility: hidden;
+  opacity: 0;
+  background: conic-gradient(var(--check-a) 90deg, var(--check-b) 90deg 180deg, var(--check-a) 180deg 270deg, var(--check-b) 270deg) 0 0 / 6rem 6rem;
+  transition: opacity 0.25s ease, visibility 0s linear 0.65s;
+}
+
+.cv.open {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.cv-bar {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--cv-bar-h);
+  box-sizing: border-box;
+  padding: 0 max(var(--cv-pad-x), env(safe-area-inset-right, 0px)) 0 max(var(--cv-pad-x), env(safe-area-inset-left, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #000;
+  box-shadow: 0 0 calc(var(--u) * 25) var(--glow-bar);
+  transform: translateY(-100%);
+  transition: transform 0.55s var(--ease);
+}
+
+.cv.open .cv-bar {
+  transform: none;
+}
+
+.cv-download,
+.cv-download * {
+  color: #fff;
+}
+
+.cv-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: clamp(13px, min(2.6vw, 4.2vh), 20px);
+  white-space: nowrap;
+  text-decoration: none;
+  transform-origin: right center;
+  transition: transform 0.15s ease-out;
+}
+
+.cv-download svg {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+
+.cv-download:hover,
+.cv-download:focus-visible {
+  transform: scale(1.12);
+  outline: none;
+}
+
+.cv-download:hover,
+.cv-download:hover *,
+.cv-download:focus-visible,
+.cv-download:focus-visible * {
+  color: #f60000;
+}
+
+.cv-body {
+  flex: 1 0 min(460px, 70vh);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding: calc(var(--cv-bar-h) + clamp(12px, 3vh, 24px)) var(--cv-pad-x) clamp(12px, 3vh, 24px);
+}
+
+.cv-sheet {
+  position: relative;
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 0.7071;
+  box-sizing: border-box;
+  border: 4px solid var(--ink);
+  background: #fff;
+  box-shadow: 0 0 calc(var(--u) * 25) var(--glow-sheet);
+  opacity: 0;
+  transform: translateY(12%) scale(0.94);
+  transition: transform 0.65s var(--ease) 0.15s, opacity 0.35s ease 0.15s;
+}
+
+.cv.open .cv-sheet {
+  opacity: 1;
+  transform: none;
+}
+
+.copyright {
+  flex: none;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--check-a);
+  padding: .3rem 0 .3rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.cv.open .copyright {
+  opacity: 1;
+  transition: opacity 0.45s ease 0.35s;
+}
+
+.copyright h2 {
+  margin: 0;
+}
+
+.copyright h3 {
+  margin: 0;
+}
+
+.cv-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  text-align: center;
+}
+
+.cv-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
+.gif-darkrai.enter {
+  animation: darkrai-in 0.85s var(--ease) 0.35s both;
+}
+
+.gif-pikachu.enter {
+  animation: pikachu-in 0.85s var(--ease) 0.45s both;
+}
+
+@keyframes pikachu-in {
+  0% {
+    opacity: 0;
+    transform: translate(calc(var(--u) * -240), calc(var(--u) * 20)) rotate(-20deg) scale(0.6);
+  }
+  45% {
+    opacity: 1;
+    transform: translate(calc(var(--u) * -40), calc(var(--u) * -48)) rotate(8deg) scale(1.1);
+  }
+  65% {
+    transform: none;
+  }
+  80% {
+    transform: translateY(calc(var(--u) * -20));
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes darkrai-in {
+  0% {
+    opacity: 0;
+    transform: translate(calc(var(--u) * 180), calc(var(--u) * -140)) scale(0.3) rotate(14deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(calc(var(--u) * -16), calc(var(--u) * 12)) scale(1.1) rotate(-4deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.back.return {
+  animation: back-return 0.45s var(--ease) 0.55s backwards;
+}
+
+@keyframes back-return {
+  from {
+    opacity: 0;
+    transform: translateX(-28px) scale(0.5) rotate(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.gif {
+  pointer-events: none;
+  user-select: none;
+}
+
+.gif-charizard,
+.gif-rayquaza,
+.gif-zekrom,
+.gif-umbreon,
+.gif-reshiram {
+  position: fixed;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(calc(var(--u) * 20)) scale(0.8);
+  transition: opacity 0.15s ease, transform 0.25s var(--ease);
+}
+
+.is-menu:not(.is-page) .gif-charizard,
+.is-page.page-about .gif-rayquaza,
+.is-page.page-projects .gif-zekrom,
+.is-page.page-education .gif-umbreon,
+.is-page.page-skills .gif-reshiram {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.35s ease 0.75s, transform 0.45s var(--ease) 0.75s;
+}
+
+.gif-pikachu {
+  position: absolute;
+  left: calc(var(--u) * -11);
+  bottom: calc(100% - var(--u) * 5);
+  width: calc(var(--u) * 95);
+}
+
+.gif-charizard {
+  top: 0;
+  right: calc(var(--u) * 41);
+  width: calc(var(--u) * 323);
+  filter: drop-shadow(15px 5px 10px var(--glow-gif));
+}
+
+.gif-rayquaza {
+  right: calc(var(--u) * 182);
+  bottom: calc(var(--u) * 67);
+  width: calc(var(--u) * 276);
+  filter: drop-shadow(15px 5px 10px var(--glow-gif));
+}
+
+.gif-reshiram {
+  left: calc(var(--u) * 41);
+  bottom: calc(var(--u) * 53);
+  width: calc(var(--u) * 300);
+}
+
+.gif-zekrom {
+  right: calc(var(--u) * 14);
+  bottom: calc(var(--u) * 64);
+  width: calc(var(--u) * 316);
+  filter: drop-shadow(15px 5px 10px var(--glow-gif));
+}
+
+.gif-umbreon {
+  right: calc(var(--u) * 28);
+  bottom: calc(var(--u) * -13);
+  width: calc(var(--u) * 244);
+  filter: drop-shadow(15px 5px 10px var(--glow-gif));
+}
+
+.gif-wizard {
+  position: absolute;
+  left: calc(var(--u) * 82);
+  bottom: calc(100% - var(--u) * 2);
+  width: calc(var(--u) * 200);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: calc(var(--u) * 67);
+  right: calc(var(--u) * 83);
+  z-index: 3;
+  width: calc(var(--u) * 48);
+  height: calc(var(--u) * 48);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: opacity 0.35s ease 0.45s, transform 0.15s ease-out;
+}
+
+.theme-toggle,
+.theme-toggle * {
+  color: #fff;
+}
+
+.theme-toggle svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+
+.theme-toggle .icon-moon,
+:root[data-theme="dark"] .theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle .icon-moon {
+  display: block;
+}
+
+.is-menu .theme-toggle {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  transform: scale(1.15);
+  outline: none;
+}
+
+.theme-toggle:hover,
+.theme-toggle:hover *,
+.theme-toggle:focus-visible,
+.theme-toggle:focus-visible * {
+  color: #fff200;
+}
+
+:root[data-theme="dark"] .skills-arrow,
+:root[data-theme="dark"] .edu-arrow {
+  filter: none !important;
+}
+
+:root[data-theme="dark"] .page-skills .back .icon {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .start {
+    animation-duration: 4s;
+  }
+
+  .menu,
+  .shape,
+  .shape-page,
+  .ring,
+  .profile-pic,
+  .page-title,
+  .page-text,
+  .option,
+  .option .pointer,
+  .option .sprite,
+  .option a,
+  .back,
+  .theme-toggle,
+  .icons,
+  .skills,
+  .edu,
+  .edu-slide,
+  .proj,
+  .proj-slide,
+  .proj-inner,
+  .edu-photo,
+  .edu-arrow,
+  .skill-group,
+  .skill img,
+  .bubble,
+  .skills-arrow,
+  .gif-darkrai,
+  .gif-pikachu,
+  .gif-reshiram,
+  .gif-charizard,
+  .gif-rayquaza,
+  .gif-zekrom,
+  .gif-umbreon,
+  .cv,
+  .cv-bar,
+  .cv-sheet,
+  .copyright,
+  .cv-download {
+    transition-duration: 0.01s !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* ---------- Mobile-only elements (hidden on desktop) ---------- */
+.cv-title,
+.m-modal {
+  display: none;
+}
+
+/* =====================================================================
+   MOBILE: one scrollable page, no JS view-switching
+   ===================================================================== */
+@media (max-width: 600px), (max-width: 1100px) and (orientation: portrait) {
+  :root {
+    --mu: calc(100vw / 390);
+  }
+
+  html,
+  body {
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body {
+    letter-spacing: 1px;
+  }
+
+  body::before,
+  .gif,
+  .options,
+  .back,
+  .shape-page,
+  .bubble {
+    display: none !important;
+  }
+
+  .title .typed::after,
+  .page-title .typed::after {
+    display: none;
+  }
+
+  .frame {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    aspect-ratio: auto;
+    overflow: hidden;
+  }
+
+  /* ---- hero ---- */
+  .shape-shadow {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(260 * var(--mu));
+    filter: none;
+    z-index: 1;
+  }
+
+  .shape {
+    position: absolute;
+    inset: 0;
+    transition: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 85.9% 48.8%, 14.1% 48.8%, 0 100%);
+  }
+
+  .ring {
+    position: absolute;
+    left: calc(50% - calc(97 * var(--mu)));
+    top: calc(30 * var(--mu));
+    width: calc(194 * var(--mu));
+    height: calc(194 * var(--mu));
+    transition: none;
+  }
+
+  .profile-pic {
+    position: absolute;
+    left: calc(50% - calc(80 * var(--mu)));
+    top: calc(47 * var(--mu));
+    width: calc(160 * var(--mu));
+    height: calc(160 * var(--mu));
+    box-shadow: none;
+    transition: none;
+    z-index: 3;
+  }
+
+  .profile-pic img {
+    transition: none;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    top: calc(20 * var(--mu));
+    right: calc(22 * var(--mu));
+    width: calc(26 * var(--mu));
+    height: calc(26 * var(--mu));
+    z-index: 4;
+  }
+
+  .menu {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    height: auto;
+    min-height: calc(607 * var(--mu));
+    box-sizing: border-box;
+    padding: calc(258 * var(--mu)) 0 0 calc(47 * var(--mu));
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
+    text-align: left;
+    transition: none;
+  }
+
+  .title {
+    font-size: calc(35 * var(--mu));
+    text-shadow: none;
+    max-width: calc(100vw - 94 * var(--mu));
+  }
+
+  .start {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(488 * var(--mu));
+    font-size: calc(16 * var(--mu));
+    text-align: center;
+  }
+
+  .title-credit {
+    position: static;
+    margin: calc(8 * var(--mu)) 0 0;
+    font-size: calc(13.5 * var(--mu));
+    letter-spacing: 1px;
+  }
+
+  /* ---- sections ---- */
+  .page {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    pointer-events: auto;
+    box-sizing: border-box;
+    padding: calc(26 * var(--mu)) 0 calc(70 * var(--mu));
+    border-top: calc(22 * var(--mu)) solid #000;
+  }
+
+  .page-title {
+    margin: 0 0 0 calc(24 * var(--mu));
+    font-size: calc(38 * var(--mu));
+    text-transform: uppercase;
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  .page-text {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    width: auto;
+  }
+
+  .page .page-text:not(.bio) {
+    display: none;
+  }
+
+  .page[data-page="about"] .page-text:not(.bio) {
+    display: block;
+    margin: calc(2 * var(--mu)) 0 0 calc(24 * var(--mu));
+    font-size: calc(12 * var(--mu));
+    line-height: 1.4;
+  }
+
+  .page-text.bio span {
+    animation: none;
+    color: #ff0000;
+  }
+
+  .page-text.bio {
+    margin: calc(18 * var(--mu)) calc(24 * var(--mu)) 0 calc(34 * var(--mu));
+    font-size: calc(10.5 * var(--mu));
+    line-height: 1.95;
+    letter-spacing: 0.6px;
+    text-align: left;
+  }
+
+  .icons {
+    margin: calc(22 * var(--mu)) 0 0 calc(34 * var(--mu));
+    padding: calc(10 * var(--mu)) calc(8 * var(--mu));
+    border: 2px solid var(--ink);
+    border-radius: 50px;
+    background: #232323;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .icons a {
+    padding: 0 calc(12 * var(--mu));
+    font-size: calc(22 * var(--mu));
+    color: white;
+  }
+
+  .skills,
+  .edu,
+  .proj {
+    flex: none;
+    align-self: stretch;
+    margin: calc(44 * var(--mu)) 0 0;
+    width: 100%;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .skill-group,
+  .edu-slide,
+  .proj-slide {
+    position: relative;
+    inset: auto;
+    display: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .skill-group[data-state="active"],
+  .edu-slide[data-state="active"],
+  .proj-slide[data-state="active"] {
+    display: flex;
+  }
+
+  /* ---- skills ---- */
+  .skills-stage {
+    width: calc(220 * var(--mu));
+    height: auto;
+  }
+
+  .skills-arrow {
+    width: calc(20 * var(--mu));
+    height: calc(17 * var(--mu));
+    top: calc(2 * var(--mu));
+  }
+
+  .skill-title {
+    height: auto;
+    min-height: calc(21 * var(--mu));
+    margin: 0 calc(26 * var(--mu));
+    justify-content: center;
+    font-size: calc(13 * var(--mu));
+    text-align: center;
+    white-space: normal;
+  }
+
+  .skill-list {
+    gap: calc(30 * var(--mu));
+    margin-top: calc(22 * var(--mu));
+  }
+
+  .skill {
+    width: calc(100 * var(--mu));
+    cursor: pointer;
+  }
+
+  .skill img {
+    border-radius: calc(18 * var(--mu));
+  }
+
+  .skill figcaption {
+    margin-top: calc(8 * var(--mu));
+    font-size: calc(13 * var(--mu));
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .skill.selected img {
+    outline: calc(3 * var(--mu)) solid var(--text);
+    outline-offset: calc(3 * var(--mu));
+  }
+
+  .m-desc {
+    box-sizing: border-box;
+    width: calc(300 * var(--mu));
+    margin: calc(20 * var(--mu)) 0 0;
+    padding: calc(12 * var(--mu)) calc(14 * var(--mu));
+    border: calc(3 * var(--mu)) solid var(--ink);
+    background: var(--paper);
+    box-shadow: calc(4 * var(--mu)) calc(4 * var(--mu)) 0 var(--hard);
+    color: var(--bubble-text);
+    font-size: calc(11 * var(--mu));
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+    text-align: left;
+  }
+
+  .m-desc[hidden] {
+    display: none;
+  }
+
+  .m-desc b {
+    display: block;
+    margin-bottom: calc(4 * var(--mu));
+    font-size: calc(12 * var(--mu));
+    color: inherit;
+  }
+
+  /* ---- education ---- */
+  .edu-stage {
+    --u: calc(var(--mu) * 0.34);
+    width: 100%;
+    height: auto;
+  }
+
+  .edu-slide {
+    align-items: center;
+  }
+
+  .edu-school,
+  .edu-detail {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 calc(20 * var(--mu));
+  }
+
+  .edu-photo {
+    cursor: pointer;
+  }
+
+  .edu-arrow.prev {
+    left: calc(50% - var(--u) * 471);
+  }
+
+  .edu-arrow.next {
+    right: calc(50% - var(--u) * 471);
+  }
+
+  /* ---- projects ---- */
+  .proj-stage {
+    --u: calc(var(--mu) * 0.35);
+    width: 100%;
+    height: auto;
+  }
+
+  .proj-slide {
+    align-items: center;
+  }
+
+  /* ---- CV ---- */
+  .cv {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    align-items: center;
+    overflow: visible;
+    visibility: visible;
+    opacity: 1;
+    background: transparent;
+    padding: calc(26 * var(--mu)) 0 0;
+    border-top: calc(22 * var(--mu)) solid #000;
+    transition: none;
+  }
+
+  .cv-title {
+    display: block;
+    order: 0;
+    margin: 0;
+    font-size: calc(30 * var(--mu));
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .cv-body {
+    order: 1;
+    flex: none;
+    padding: calc(24 * var(--mu)) 0 0;
+  }
+
+  .cv-sheet {
+    width: calc(215 * var(--mu));
+    height: calc(var(--mu) * 215 / 0.7071);
+    aspect-ratio: auto;
+    border-width: calc(7 * var(--mu));
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .cv-bar {
+    order: 2;
+    position: static;
+    height: auto;
+    padding: calc(14 * var(--mu)) 0 0;
+    justify-content: center;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    transition: none;
+  }
+
+  .cv-download,
+  .cv-download * {
+    color: var(--text);
+  }
+
+  .cv-download {
+    font-size: calc(15 * var(--mu));
+    transform-origin: center;
+  }
+
+  .copyright {
+    order: 3;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: calc(60 * var(--mu));
+    opacity: 1;
+    transition: none;
+  }
+
+  /* ---- Facebook confirmation pop-up (education) ---- */
+  .m-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .m-modal.open {
+    display: flex;
+  }
+
+  .m-modal-box {
+    box-sizing: border-box;
+    width: calc(100vw - calc(56 * var(--mu)));
+    max-width: calc(340 * var(--mu));
+    padding: calc(26 * var(--mu)) calc(20 * var(--mu)) calc(24 * var(--mu));
+    border: calc(4 * var(--mu)) solid var(--ink);
+    background: var(--paper);
+    box-shadow: calc(6 * var(--mu)) calc(6 * var(--mu)) 0 var(--hard);
+    text-align: center;
+  }
+
+  .m-modal-box p {
+    margin: 0;
+    font-size: calc(15 * var(--mu));
+    line-height: 1.5;
+    letter-spacing: 1px;
+  }
+
+  .m-modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: calc(16 * var(--mu));
+    margin-top: calc(24 * var(--mu));
+    padding: 0 calc(10 * var(--mu));
+  }
+
+  .m-modal-actions button {
+    flex: 1;
+    max-width: calc(96 * var(--mu));
+    height: calc(36 * var(--mu));
+    border: 0;
+    border-radius: calc(10 * var(--mu));
+    background: #2b2b2b;
+    font: inherit;
+    font-size: calc(15 * var(--mu));
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+
+  .m-modal-actions button,
+  .m-modal-actions button * {
+    color: #fff;
+  }
+
+  :root[data-theme="dark"] .m-modal-actions button {
+    background: #000;
+  }
+}
+
+  
+
+/* Quick slide animation while swiping (desktop / tablet landscape layout) */
+.quick > .skill-group,
+.quick > .edu-slide,
+.quick > .proj-slide {
+  transition: opacity 0.15s ease, transform 0.2s ease-out, visibility 0s linear 0.2s;
+}
+
+.quick > .skill-group[data-state="active"],
+.quick > .edu-slide[data-state="active"],
+.quick > .proj-slide[data-state="active"] {
+  transition: opacity 0.15s ease, transform 0.2s ease-out, visibility 0s;
+}
+
+/* Quick slide-in animation (mobile / tablet portrait layout) */
+@keyframes slideInNext {
+  from { opacity: 0; translate: 60px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes slideInPrev {
+  from { opacity: 0; translate: -60px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@media (max-width: 600px), (max-width: 1100px) and (orientation: portrait) {
+  .skill-group[data-state="active"][data-dir="next"],
+  .edu-slide[data-state="active"][data-dir="next"],
+  .proj-slide[data-state="active"][data-dir="next"] {
+    animation: slideInNext 0.22s ease-out;
+  }
+
+  .skill-group[data-state="active"][data-dir="prev"],
+  .edu-slide[data-state="active"][data-dir="prev"],
+  .proj-slide[data-state="active"][data-dir="prev"] {
+    animation: slideInPrev 0.22s ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-group[data-state="active"],
+  .edu-slide[data-state="active"],
+  .proj-slide[data-state="active"] {
+    animation: none !important;
+  }
+}
+
+/* ---------- Swipe support (touch devices) ---------- */
+.skills-stage,
+.edu-stage,
+.proj-stage {
+  touch-action: pan-y;
+}
+</style>
+</head>
+<body>
+  <main class="frame" id="frame">
+
+    <img class="gif gif-darkrai" src="images/darkrai.gif" alt="" />
+    <img class="gif gif-charizard" src="images/charizard.gif" alt="" />
+    <img class="gif gif-rayquaza" src="images/rayquaza.gif" alt="" />
+    <img class="gif gif-zekrom" src="images/zekrom.gif" alt="" />
+    <img class="gif gif-reshiram" src="images/reshiram.gif" alt="" />
+    <img class="gif gif-umbreon" src="images/umbreon.gif" alt="" />
+
+    <div class="menu" id="intro">
+      <div class="title-wrap">
+      <h1 class="title" id="title" aria-label="Fed's Portfolio"><span class="typed" aria-hidden="true"></span><span class="rest" aria-hidden="true">Fed's Portfolio</span><img class="gif gif-pikachu" src="images/pikachu.gif" alt="" /></h1>
+      <p class="title-credit" id="credit"><span>By: Justin Rainier M. Magante</span><span>BSIT - III-IT9</span></p>
+      </div>
+      <a class="start" id="start" href="fed-profile.html">Press to start</a>
+    </div>
+
+    <div class="shape-shadow">
+      <div class="shape"></div>
+      <div class="shape-page"></div>
+      <div class="ring"></div>
+    </div>
+
+    <div class="profile-pic">
+      <img class="pic-home" src="images/fed.jpg"/>
+      <img class="pic-about" src="images/about1.gif"/>
+      <img class="pic-skills" src="images/skills1.gif"/>
+      <img class="pic-education" src="images/education1.gif"/>
+      <img class="pic-projects" src="images/projects1.gif"/>
+    </div>
+
+    <section class="page" data-page="about" inert>
+      <h2 class="page-title" style="--x: 105; --y: 175">About Me</h2>
+      <p class="page-text" style="--x: 111; --gap: 5; --w: 2000">Knowing yourself is the beginning of all wisdom.</p>
+      <p class="page-text bio" style="--x: 111; --gap: 61">Hi, I'm <span>Justin Rainier M. Magante</span>, a 3rd-year Bachelor of Science in Information Technology (BSIT) student at the City College of Calamba. Specializing in web design and graphic design, I focus on creating intuitive, visually compelling user interfaces and digital layouts. I combine a strong understanding of user experience with a clean aesthetic to design websites and creative assets that are both functional and engaging. Outside of my technical and design pursuits, I stay inspired by strategy gaming and modern animation. I am currently seeking internship opportunities and freelance projects where I can help brands elevate their digital presence.</p>
+      <div class="icons" style="--x: 111">
+        <a class="fa-brands fa-facebook" href="https://www.facebook.com/fedominus" target="_blank" title="Facebook"></a>
+        <a class="fa-solid fa-envelope" href="mailto:magantejustinrainier@gmail.com" target="_blank" title="Gmail"></a>
+        <a class="fa-brands fa-discord" href="https://www.discord.com/users/729160789620949033" target="_blank" title="Discord"></a>
+        <a class="fa-brands fa-github" href="https://www.github.com/Fedominus" target="_blank" title="Github"></a>
+        <img class="gif gif-wizard" src="images/GamingWizard.gif" alt="" />
+      </div>
+    </section>
+
+    <section class="page" data-page="skills" inert>
+      <h2 class="page-title" style="--x: 106; --y: 62">Skills</h2>
+      <p class="page-text" style="--x: 112; --gap: 3; --w: 2000">Transforming raw ideas into functional systems and pixel-perfect design, pixel by pixel.</p>
+
+      <div class="skills">
+        <div class="skills-stage">
+
+          <div class="skill-group">
+            <h3 class="skill-title">Web Design &amp; UI/UX</h3>
+            <div class="skill-list">
+              <figure class="skill" data-side="left" tabindex="0">
+                <img src="images/figma.png" alt="Figma" />
+                <figcaption>Figma</figcaption>
+                <p class="bubble">For structural wireframing, high-fidelity user interfaces, and interactive web prototypes.</p>
+              </figure>
+              <figure class="skill" data-side="right" tabindex="0">
+                <img src="images/canva.png" alt="Canva" />
+                <figcaption>Canva</figcaption>
+                <p class="bubble">For rapid prototyping, web banners, and visual layouts.</p>
+              </figure>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-title">Graphic Design</h3>
+            <div class="skill-list">
+              <figure class="skill" data-side="left" tabindex="0">
+                <img src="images/photoshop.png" />
+                <figcaption>Adobe Photoshop</figcaption>
+                <p class="bubble">For editing and enhancing digital imagery, photo composites, and web graphics.</p>
+              </figure>
+              <figure class="skill" data-side="right" tabindex="0">
+                <img src="images/illustrator.png" />
+                <figcaption>Adobe Illustrator</figcaption>
+                <p class="bubble">For creating scalable vector graphics, custom logos, and branding assets.</p>
+              </figure>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-title">Document Design &amp; Productivity</h3>
+            <div class="skill-list">
+              <figure class="skill" data-side="left" tabindex="0">
+                <img src="images/office.png" />
+                <figcaption>Microsoft Office</figcaption>
+                <p class="bubble">Advanced document formatting in Word and visual presentation design in PowerPoint.</p>
+              </figure>
+              <figure class="skill" data-side="right" tabindex="0">
+                <img src="images/google.png" />
+                <figcaption>Google Workspace</figcaption>
+                <p class="bubble">For cloud-based documentation, spreadsheets, and seamless project collaboration.</p>
+              </figure>
+            </div>
+          </div>
+
+          <button class="skills-arrow prev" id="skills-prev" type="button" aria-label="Previous category" style="--img: url('images/left_arrow.png'); --flip: 1; --filter: invert(1)"></button>
+          <button class="skills-arrow next" id="skills-next" type="button" aria-label="Next category" style="--img: url('images/left_arrow.png'); --flip: -1; --filter: invert(1)"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="education" inert>
+      <h2 class="page-title" style="--x: 381; --y: 173">Education</h2>
+      <p class="page-text" style="--x: 387; --gap: 2; --w: 2000">Live as if you were to die tomorrow. Learn as if you were to live forever.</p>
+
+      <div class="edu">
+        <div class="edu-stage">
+
+          <div class="edu-slide">
+            <h3 class="edu-years">AY. 2024 - 2028 <span>(Present)</span></h3>
+            <a class="edu-photo" href="https://www.facebook.com/citycollegeofcalamba" target="_blank" rel="noopener noreferrer">
+            <img src="images/ccc.png" alt="City College of Calamba" /><span class="bubble">Click to visit the City College of Calamba Facebook page.</span></a>
+            <h4 class="edu-school">City College of Calamba (CCC)</h4>
+            <p class="edu-detail">Bachelor of Science in Information and Technology</p>
+            <p class="edu-detail">General Lim St, Calamba City, Laguna</p>
+          </div>
+
+          <div class="edu-slide">
+            <h3 class="edu-years">SY. 2022 - 2024</h3>
+            <a class="edu-photo" href="https://www.facebook.com/CalambaIS" target="_blank" rel="noopener noreferrer">
+            <img src="images/cis.png" alt="Calamba Integrated School" /><span class="bubble">Click to visit the Calamba Integrated School Facebook page.</span></a>
+            <h4 class="edu-school">Calamba Integrated School (CIS)</h4>
+            <p class="edu-detail">Senior High (ABM) with Honor</p>
+            <p class="edu-detail">Gitnang Bukid, Brgy. Ba&ntilde;adero, Calamba City, Laguna</p>
+          </div>
+
+          <div class="edu-slide">
+            <h3 class="edu-years">SY. 2019 - 2022</h3>
+            <a class="edu-photo" href="https://www.facebook.com/CalambaIS" target="_blank" rel="noopener noreferrer">
+            <img src="images/cis.png" alt="Calamba Integrated School" /><span class="bubble">Click to visit the Calamba Integrated School Facebook page.</span></a>
+            <h4 class="edu-school">Calamba Integrated School (CIS)</h4>
+            <p class="edu-detail">Junior High</p>
+            <p class="edu-detail">Gitnang Bukid, Brgy. Ba&ntilde;adero, Calamba City, Laguna</p>
+          </div>
+
+          <div class="edu-slide">
+            <h3 class="edu-years">SY. 2018 - 2019</h3>
+            <a class="edu-photo" href="https://www.facebook.com/DepEdTayoLBNHSPoblacion301246" target="_blank" rel="noopener noreferrer">
+            <img src="images/lbnhs.png" alt="Los Ba&ntilde;os National High School" /><span class="bubble">Click to visit the Los Ba&ntilde;os National High School Facebook page.</span></a>
+            <h4 class="edu-school">Los Ba&ntilde;os National High School</h4>
+            <p class="edu-detail">Junior High</p>
+            <p class="edu-detail">Jamboree Road, Brgy. Timugan, Los Ba&ntilde;os</p>
+          </div>
+
+          <div class="edu-slide">
+            <h3 class="edu-years">SY. 2012 - 2018</h3>
+            <a class="edu-photo" href="https://www.facebook.com/DepEdTayoBES109814" target="_blank" rel="noopener noreferrer">
+            <img src="images/bes.png" alt="Bucal Elementary School" /><span class="bubble">Click to visit the Bucal Elementary School Facebook page.</span></a>
+            <h4 class="edu-school">Bucal Elementary School (BES)</h4>
+            <p class="edu-detail">Elementary</p>
+            <p class="edu-detail">National Highway, Brgy. Bucal, Calamba City, Laguna</p>
+          </div>
+
+          <button class="edu-arrow prev" id="edu-prev" type="button" aria-label="Previous school" style="--img: url('images/left_arrow.png'); --flip: 1; --filter: invert(1)"></button>
+          <button class="edu-arrow next" id="edu-next" type="button" aria-label="Next school" style="--img: url('images/left_arrow.png'); --flip: -1; --filter: invert(1)"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="projects" inert>
+      <h2 class="page-title" style="--x: 197; --y: 53">Projects</h2>
+      <p class="page-text" style="--x: 202; --gap: 2; --w: 2000">A curated collection of digital builds, quests completed, and ideas brought to life pixel by pixel.</p>
+
+      <div class="proj">
+        <div class="proj-stage">
+
+          <div class="proj-slide">
+            <div class="proj-card" role="button" tabindex="0" aria-label="Fed's Profile Portfolio. Click to see details.">
+              <p class="bubble">Click for description.</p>
+              <div class="proj-inner">
+                <div class="proj-face proj-front">
+                  <div class="proj-screen"><img src="images/profile.png" alt="Screenshot of Fed's Profile Portfolio" /></div>
+                </div>
+                <div class="proj-face proj-back">
+                  <div class="proj-screen proj-info">
+                    <p class="proj-row name"><b>Project Name:</b>Fed's Profile</p>
+                    <p class="proj-row desc"><b>Description:</b><span>A gamer-themed personal profile landing page titled "Fedominus", featuring a pixelated typography header, a 3D anime/Roblox-style avatar, a quick bio, social links, and a pixelated top navigation bar.</span></p>
+                    <p class="proj-row app"><b>Languages and Applications used:</b><span>HTML, CSS, JavaScript, VS Code</span></p>
+                    <p class="proj-row status"><b>Status:</b>Incomplete</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="proj-name">Fed's Profile</h4>
+          </div>
+
+          <div class="proj-slide">
+            <div class="proj-card" role="button" tabindex="0" aria-label="Next project. Click to see details.">
+              <p class="bubble">Click for description.</p>
+              <div class="proj-inner">
+                <div class="proj-face proj-front">
+                  <div class="proj-screen"><img src="images/logo-adapt.png" alt="Screenshot of Fed's Profile Portfolio" /></div>
+                </div>
+                <div class="proj-face proj-back">
+                  <div class="proj-screen proj-info">
+                    <p class="proj-row name"><b>Project Name:</b> BrandDesign</p>
+                    <p class="proj-row desc"><b>Description:</b> A minimalist, tech-inspired logo mark featuring a central wheel-and-nodes icon above the brand name "ADAPT" and the tagline "adapt to everything.</p>
+                    <p class="proj-row app"><b>Application used:</b> Adobe Photoshop</p>
+                    <p class="proj-row status"><b>Status:</b> Completed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="proj-name">Brand Design</h4>
+          </div>
+
+          <div class="proj-slide">
+            <div class="proj-card" role="button" tabindex="0" aria-label="Next project. Click to see details.">
+              <p class="bubble">Click for description.</p>
+              <div class="proj-inner">
+                <div class="proj-face proj-front">
+                  <div class="proj-screen"><img src="images/techweek.png" alt="Screenshot of Fed's Profile Portfolio" /></div>
+                </div>
+                <div class="proj-face proj-back">
+                  <div class="proj-screen proj-info">
+                    <p class="proj-row name"><b>Project Name:</b> DigitalMarketingGraphics</p>
+                    <p class="proj-row desc"><b>Description:</b> A futuristic banner design featuring futuristic line-art framing, an abstract head/mask centerpiece, portal-like side graphics, and event icons highlighting tech exhibits, competitions, and workshops for "Tech Week: An Academic Showcase of Technology."</p>
+                    <p class="proj-row app"><b>Application used:</b> Adobe Photoshop</p>
+                    <p class="proj-row status"><b>Status:</b> Completed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="proj-name">Tech Week Landing Page</h4>
+          </div>
+
+          <div class="proj-slide">
+            <div class="proj-card" role="button" tabindex="0" aria-label="Next project. Click to see details.">
+              <p class="bubble">Click for description.</p>
+              <div class="proj-inner">
+                <div class="proj-face proj-front">
+                  <div class="proj-screen"><img src="images/typography.png" alt="Screenshot of Fed's Profile Portfolio" /></div>
+                </div>
+                <div class="proj-face proj-back">
+                  <div class="proj-screen proj-info">
+                    <p class="proj-row name"><b>Project Name:</b> TypographyBrandPoster</p>
+                    <p class="proj-row desc"><b>Description:</b> A custom anime title card logo for Bleach: Thousand-Year Blood War – The Final Arc, blending futuristic sharp frame motifs, aggressive brush lettering in red, and gothic-style typography.</p>
+                    <p class="proj-row app"><b>Application used:</b> Adobe Photoshop</p>
+                    <p class="proj-row status"><b>Status:</b> Completed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="proj-name">Typography</h4>
+          </div>
+
+          <div class="proj-slide">
+            <div class="proj-card" role="button" tabindex="0" aria-label="Next project. Click to see details.">
+              <p class="bubble">Click for description.</p>
+              <div class="proj-inner">
+                <div class="proj-face proj-front">
+                  <div class="proj-screen"><img src="images/figma-portfolio.png" alt="Screenshot of Fed's Profile Portfolio" /></div>
+                </div>
+                <div class="proj-face proj-back">
+                  <div class="proj-screen proj-info">
+                    <p class="proj-row name"><b>Project Name:</b> My Portfolio</p>
+                    <p class="proj-row desc"><b>Description:</b> A comprehensive Figma UI/UX design workspace showing high-fidelity desktop and mobile wireframes/prototypes for a multi-page personal portfolio website.</p>
+                    <p class="proj-row app"><b>Application used:</b> Figma</p>
+                    <p class="proj-row status"><b>Status:</b> Completed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h4 class="proj-name">My Portfolio</h4>
+          </div>
+
+          <button class="edu-arrow proj-arrow prev" id="proj-prev" type="button" aria-label="Previous project" style="--img: url('images/left_arrow.png'); --flip: 1; --filter: invert(1)"></button>
+          <button class="edu-arrow proj-arrow next" id="proj-next" type="button" aria-label="Next project" style="--img: url('images/left_arrow.png'); --flip: -1; --filter: invert(1)"></button>
+        </div>
+      </div>
+    </section>
+
+    <ul class="options" id="options" inert>
+      <li class="option" style="--i: 0; --color: #720404; --arrow: url('images/right_arrow.png')">
+        <a href="fed-profile.html#about" data-view="about">About<img class="sprite" src="images/about.gif" alt="" /></a>
+        <span class="pointer" aria-hidden="true"></span>
+      </li>
+      <li class="option" style="--i: 1; --color: #a64d14; --arrow: url('images/right_arrow.png')">
+        <a href="fed-profile.html#skills" data-view="skills">Skills<img class="sprite" src="images/skills.gif" alt="" /></a>
+        <span class="pointer" aria-hidden="true"></span>
+      </li>
+      <li class="option" style="--i: 2; --color: #878198; --arrow: url('images/right_arrow.png')">
+        <a href="fed-profile.html#education" data-view="education">Education<img class="sprite" src="images/education.gif" alt="" /></a>
+        <span class="pointer" aria-hidden="true"></span>
+      </li>
+      <li class="option" style="--i: 3; --color: #3a3a51; --arrow: url('images/right_arrow.png')">
+        <a href="fed-profile.html#projects" data-view="projects">Projects<img class="sprite" src="images/projects.gif" alt="" /></a>
+        <span class="pointer" aria-hidden="true"></span>
+      </li>
+      <li class="option" style="--i: 4; --color: #3a9d14; --arrow: url('images/right_arrow.png')">
+        <a href="fed-profile.html#cv" data-view="cv">Curriculum Vitae<img class="sprite" src="images/vitae.gif" alt="" /></a>
+        <span class="pointer" aria-hidden="true"></span>
+      </li>
+    </ul>
+    <button class="back" id="back" type="button" aria-label="Back" title="Go Back" inert>
+      <span class="icon" aria-hidden="true"></span>
+    </button>
+
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">
+      <svg class="icon-moon" viewBox="0 0 12 12" aria-hidden="true">
+          <rect x="3" y="1" width="2" height="1" />
+          <rect x="2" y="2" width="2" height="1" />
+          <rect x="1" y="3" width="3" height="1" />
+          <rect x="1" y="4" width="3" height="1" />
+          <rect x="0" y="5" width="4" height="1" />
+          <rect x="0" y="6" width="5" height="1" />
+          <rect x="1" y="7" width="4" height="1" />
+          <rect x="1" y="8" width="6" height="1" />
+          <rect x="10" y="8" width="1" height="1" />
+          <rect x="2" y="9" width="8" height="1" />
+          <rect x="3" y="10" width="6" height="1" />
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 12 12" aria-hidden="true">
+          <rect x="5" y="0" width="2" height="1" />
+          <rect x="5" y="1" width="2" height="1" />
+          <rect x="2" y="2" width="1" height="1" />
+          <rect x="9" y="2" width="1" height="1" />
+          <rect x="5" y="3" width="2" height="1" />
+          <rect x="4" y="4" width="4" height="1" />
+          <rect x="0" y="5" width="2" height="1" />
+          <rect x="3" y="5" width="6" height="1" />
+          <rect x="10" y="5" width="2" height="1" />
+          <rect x="0" y="6" width="2" height="1" />
+          <rect x="3" y="6" width="6" height="1" />
+          <rect x="10" y="6" width="2" height="1" />
+          <rect x="4" y="7" width="4" height="1" />
+          <rect x="5" y="8" width="2" height="1" />
+          <rect x="2" y="9" width="1" height="1" />
+          <rect x="9" y="9" width="1" height="1" />
+          <rect x="5" y="10" width="2" height="1" />
+          <rect x="5" y="11" width="2" height="1" />
+      </svg>
+    </button>
+
+  </main>
+
+  <section class="cv" id="cv" inert>
+    <h2 class="cv-title">Curriculum Vitae</h2>
+    <div class="cv-bar">
+      <a class="cv-download" href="CV.pdf" download="3-IT9_MAGANTE_Justin_Rainier_M._CV.pdf" title="Download CV">
+        <svg viewBox="0 0 12 12" aria-hidden="true">
+          <rect x="5" y="0" width="2" height="6" />
+          <rect x="3" y="5" width="6" height="1" />
+          <rect x="4" y="6" width="4" height="1" />
+          <rect x="5" y="7" width="2" height="1" />
+          <rect x="0" y="9" width="2" height="3" />
+          <rect x="10" y="9" width="2" height="3" />
+          <rect x="0" y="10" width="12" height="2" />
+        </svg>
+        <span>Download</span>
+      </a>
+    </div>
+    <div class="cv-body">
+      <div class="cv-sheet">
+        <p class="cv-fallback">CV preview unavailable. Use the Download button.</p>
+        <iframe class="cv-frame" title="Curriculum Vitae preview" data-src="CV.pdf#toolbar=0&navpanes=0&view=FitH"></iframe>
+      </div>
+    </div>
+    <footer class="copyright">
+      <h2>©Fedominus</h2>
+      <h3>All Rights Reserved</h3>
+    </footer>
+  </section>
+
+  <div class="m-modal" id="m-modal" aria-hidden="true">
+    <div class="m-modal-box" role="dialog" aria-modal="true" aria-labelledby="m-modal-text">
+      <p id="m-modal-text">Would you like to go to <span id="m-school"></span> Facebook Page?</p>
+      <div class="m-modal-actions">
+        <button type="button" id="m-yes">Yes</button>
+        <button type="button" id="m-no">No</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const frame = document.getElementById("frame");
+    const intro = document.getElementById("intro");
+    const start = document.getElementById("start");
+    const options = document.getElementById("options");
+    const back = document.getElementById("back");
+    const themeToggle = document.getElementById("theme-toggle");
+    const items = [...options.querySelectorAll(".option")];
+    const links = items.map((item) => item.querySelector("a"));
+    const darkrai = document.querySelector(".gif-darkrai");
+    const pikachu = document.querySelector(".gif-pikachu");
+    const typed = document.querySelector("#title .typed");
+    const rest = document.querySelector("#title .rest");
+    const credit = document.getElementById("credit");
+    const TITLE = "Fed's Portfolio";
+    const mobileMQ = matchMedia("(max-width: 600px), (max-width: 1100px) and (orientation: portrait)");
+    const isMobile = mobileMQ.matches;
+    mobileMQ.addEventListener("change", () => location.reload());
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pages = {};
+    document.querySelectorAll(".page").forEach((section) => {
+      const heading = section.querySelector(".page-title");
+      const title = heading.textContent.trim();
+      heading.setAttribute("aria-label", title);
+      heading.innerHTML = '<span class="typed" aria-hidden="true"></span><span class="rest" aria-hidden="true"></span>';
+      pages[section.dataset.page] = {
+        section,
+        title,
+        typed: heading.querySelector(".typed"),
+        rest: heading.querySelector(".rest")
+      };
+    });
+    const pageClasses = Object.keys(pages).map((name) => "page-" + name);
+    function carousel(slides, prev, next) {
+      let index = 0;
+
+      function show(target, animate) {
+        const targetIndex = Math.min(Math.max(target, 0), slides.length - 1);
+        const dir = targetIndex > index ? "next" : "prev";
+        const changed = targetIndex !== index;
+        index = targetIndex;
+        slides.forEach((slide, n) => {
+          if (animate && changed) slide.dataset.dir = dir;
+          else delete slide.dataset.dir;
+          slide.dataset.state = n < index ? "before" : n > index ? "after" : "active";
+          slide.inert = n !== index;
+        });
+        prev.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+        prev.classList.toggle("off", prev.disabled);
+        next.classList.toggle("off", next.disabled);
+      }
+
+      prev.addEventListener("click", () => show(index - 1, true));
+      next.addEventListener("click", () => show(index + 1, true));
+      show(0);
+      return { step: (by) => show(index + by, true), reset: () => show(0) };
+    }
+
+    const carousels = {
+      skills: carousel(
+        [...document.querySelectorAll(".skill-group")],
+        document.getElementById("skills-prev"),
+        document.getElementById("skills-next")
+      ),
+      education: carousel(
+        [...document.querySelectorAll(".edu-slide")],
+        document.getElementById("edu-prev"),
+        document.getElementById("edu-next")
+      ),
+      projects: carousel(
+        [...document.querySelectorAll(".proj-slide")],
+        document.getElementById("proj-prev"),
+        document.getElementById("proj-next")
+      )
+    };
+
+    function enableSwipe(stage, api) {
+      if (!stage) return;
+      let startX = 0, startY = 0, tracking = false, swiped = false;
+      const MIN_DIST = 40;
+
+      stage.addEventListener("touchstart", (e) => {
+        if (e.touches.length !== 1) { tracking = false; return; }
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        tracking = true;
+        swiped = false;
+      }, { passive: true });
+
+      stage.addEventListener("touchend", (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        if (Math.abs(dx) < MIN_DIST || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+        swiped = true;
+        stage.classList.add("quick");
+        clearTimeout(stage._quickTimer);
+        stage._quickTimer = setTimeout(() => stage.classList.remove("quick"), 450);
+        api.step(dx < 0 ? 1 : -1);
+        stage.querySelectorAll(".proj-card.flipped").forEach((c) => c.classList.remove("flipped"));
+        setTimeout(() => { swiped = false; }, 400);
+      }, { passive: true });
+
+      stage.addEventListener("touchcancel", () => { tracking = false; }, { passive: true });
+
+      // Don't let a swipe also count as a tap (flip card, open school link, pick skill)
+      stage.addEventListener("click", (e) => {
+        if (swiped) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          swiped = false;
+        }
+      }, true);
+    }
+    enableSwipe(document.querySelector(".skills-stage"), carousels.skills);
+    enableSwipe(document.querySelector(".edu-stage"), carousels.education);
+    enableSwipe(document.querySelector(".proj-stage"), carousels.projects);
+
+    const projCards = [...document.querySelectorAll(".proj-card")];
+    projCards.forEach((card) => {
+      card.addEventListener("click", () => card.classList.toggle("flipped"));
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          e.stopPropagation();
+          card.classList.toggle("flipped");
+        }
+      });
+    });
+    ["proj-prev", "proj-next"].forEach((id) =>
+      document.getElementById(id).addEventListener("click", () => projCards.forEach((c) => c.classList.remove("flipped")))
+    );
+
+    const skillsArea = document.querySelector(".skills");
+    const skillItems = [...document.querySelectorAll(".skill")];
+
+    function placeBubble(skill) {
+      const bubble = skill.querySelector(".bubble");
+      const icon = skill.querySelector("img").getBoundingClientRect();
+      const area = skillsArea.getBoundingClientRect();
+      const edge = parseFloat(getComputedStyle(skillsArea).getPropertyValue("--bubble-edge")) || 24;
+      const minX = area.left + edge;
+      const maxX = area.right - edge;
+      const width = bubble.offsetWidth;
+      const height = bubble.offsetHeight;
+      const gap = width * 0.02;
+      const top = icon.top - width * 0.06;
+      const neighbours = [...skill.parentElement.children]
+        .filter((item) => item !== skill)
+        .map((item) => item.querySelector("img").getBoundingClientRect());
+      const clear = (x, y) =>
+        !neighbours.some((n) => x < n.right && x + width > n.left && y < n.bottom && y + height > n.top);
+      const spots = {
+        left: icon.left - width - gap,
+        right: icon.right + gap,
+        top: icon.left + (icon.width - width) / 2
+      };
+      const preferred = skill.dataset.pref;
+      const order = [preferred, preferred === "left" ? "right" : "left", "top"];
+      let side = "top";
+      let shift = 0;
+      for (const option of order) {
+        const x = spots[option];
+        if (option === "top") {
+          shift = x < minX ? minX - x : x + width > maxX ? maxX - (x + width) : 0;
+          break;
+        }
+        if (x >= minX && x + width <= maxX && clear(x, top)) {
+          side = option;
+          break;
+        }
+      }
+      skill.dataset.side = side;
+      bubble.style.setProperty("--shift", shift + "px");
+    }
+
+    skillItems.forEach((skill) => {
+      skill.dataset.pref = skill.dataset.side || "left";
+      skill.addEventListener("mouseenter", () => placeBubble(skill));
+      skill.addEventListener("focus", () => placeBubble(skill));
+    });
+    let view = "title";
+    let currentPage = null;
+    let pageTimer;
+    let cleanupTimer;
+    let typing = false;
+    let typingTimer;
+
+    function typeTitle(delay) {
+      clearTimeout(typingTimer);
+      typed.textContent = "";
+      rest.textContent = TITLE;
+      if (reduceMotion) {
+        typed.textContent = TITLE;
+        rest.textContent = "";
+        return;
+      }
+      typing = true;
+      start.style.visibility = "hidden";
+      credit.style.visibility = "hidden";
+      let i = 0;
+      const tick = () => {
+        i++;
+        typed.textContent = TITLE.slice(0, i);
+        rest.textContent = TITLE.slice(i);
+        if (i < TITLE.length) {
+          typingTimer = setTimeout(tick, 70 + Math.random() * 60);
+        } else {
+          typing = false;
+          start.style.visibility = "";
+          credit.style.visibility = "";
+        }
+      };
+      typingTimer = setTimeout(tick, delay);
+    }
+
+    function fitTitle() {
+      const wrap = document.querySelector(".title-wrap");
+      if (isMobile || !wrap) return;
+      const room = intro.clientWidth * 0.9;
+      wrap.style.removeProperty("--title-fit");
+      let fit = 1;
+      for (let i = 0; i < 4; i++) {
+        const width = Math.max(document.getElementById("title").offsetWidth, credit.offsetWidth);
+        if (!width) return;
+        if (width <= room && i > 0) break;
+        fit = Math.max(0.3, Math.min(1, fit * room / width));
+        wrap.style.setProperty("--title-fit", fit.toFixed(4));
+      }
+    }
+    window.addEventListener("resize", fitTitle);
+
+    if (!isMobile) document.fonts.ready.then(() => { fitTitle(); typeTitle(300); });
+
+    function typePage(delay) {
+      const { title, typed, rest } = pages[currentPage];
+      clearTimeout(pageTimer);
+      typed.textContent = "";
+      rest.textContent = title;
+      if (reduceMotion) {
+        typed.textContent = title;
+        rest.textContent = "";
+        frame.classList.add("page-ready");
+        return;
+      }
+      let i = 0;
+      const tick = () => {
+        i++;
+        typed.textContent = title.slice(0, i);
+        rest.textContent = title.slice(i);
+        if (i < title.length) {
+          pageTimer = setTimeout(tick, 70 + Math.random() * 60);
+        } else {
+          frame.classList.add("page-ready");
+        }
+      };
+      pageTimer = setTimeout(tick, delay);
+    }
+
+    const OPEN_SWEEP = { about: "tlbr", skills: "tb", education: "bltr", projects: "bt" };
+    const CLOSE_SWEEP = { about: "brtl", skills: "bt", education: "trbl", projects: "tb" };
+
+    function pulse(kind) {
+      if (reduceMotion) return;
+      document.body.dataset.sweep = kind;
+      document.body.classList.remove("pulse");
+      void document.body.offsetWidth;
+      document.body.classList.add("pulse");
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      const action = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+      themeToggle.setAttribute("aria-label", action);
+      themeToggle.title = action;
+    }
+
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+
+    themeToggle.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      applyTheme(next);
+      try {
+        localStorage.setItem("theme", next);
+      } catch (error) {}
+    });
+
+    function replay(element, className) {
+      element.classList.remove(className);
+      if (reduceMotion) return;
+      void element.offsetWidth;
+      element.classList.add(className);
+    }
+
+    darkrai.addEventListener("animationend", () => darkrai.classList.remove("enter"));
+    pikachu.addEventListener("animationend", () => pikachu.classList.remove("enter"));
+    back.addEventListener("animationend", () => back.classList.remove("return"));
+
+    function openMenu() {
+      if (view !== "title") return;
+      view = "menu";
+      pulse("lr");
+      darkrai.classList.remove("enter");
+      pikachu.classList.remove("enter");
+      frame.classList.add("is-menu");
+      intro.inert = true;
+      options.inert = false;
+      back.inert = false;
+      start.blur();
+    }
+
+    function closeMenu() {
+      if (view !== "menu") return;
+      view = "title";
+      pulse("rl");
+      replay(darkrai, "enter");
+      replay(pikachu, "enter");
+      frame.classList.remove("is-menu");
+      intro.inert = false;
+      options.inert = true;
+      back.inert = true;
+      typeTitle(450);
+    }
+
+    function openPage(name) {
+      if (view !== "menu") return;
+      view = "page";
+      pulse(OPEN_SWEEP[name]);
+      back.classList.remove("return");
+      currentPage = name;
+      if (carousels[name]) carousels[name].reset();
+      clearTimeout(cleanupTimer);
+      frame.classList.remove(...pageClasses);
+      Object.values(pages).forEach((item) => {
+        item.section.classList.remove("active");
+        item.section.inert = true;
+      });
+      frame.classList.add("page-" + name);
+      pages[name].section.classList.add("active");
+      pages[name].section.inert = false;
+      void frame.offsetWidth;
+      frame.classList.add("is-page");
+      options.inert = true;
+      typePage(850);
+    }
+
+    function closePage() {
+      if (view !== "page") return;
+      view = "menu";
+      pulse(CLOSE_SWEEP[currentPage]);
+      replay(back, "return");
+      clearTimeout(pageTimer);
+      frame.classList.remove("is-page", "page-ready");
+      options.inert = false;
+      const leaving = currentPage;
+      pages[leaving].section.inert = true;
+      cleanupTimer = setTimeout(() => {
+        if (view !== "page") {
+          frame.classList.remove("page-" + leaving);
+          pages[leaving].section.classList.remove("active");
+          pages[leaving].typed.textContent = "";
+          pages[leaving].rest.textContent = "";
+        }
+      }, 950);
+    }
+
+    const cv = document.getElementById("cv");
+    const cvFrame = cv.querySelector(".cv-frame");
+
+    function openCV() {
+      if (view !== "menu") return;
+      view = "cv";
+      if (!cvFrame.getAttribute("src")) cvFrame.src = cvFrame.dataset.src;
+      options.inert = true;
+      cv.inert = false;
+      cv.classList.add("open");
+    }
+
+    function closeCV() {
+      if (view !== "cv") return;
+      view = "menu";
+      cv.classList.remove("open");
+      cv.inert = true;
+      options.inert = false;
+    }
+
+    if (isMobile) {
+      typed.textContent = TITLE;
+      rest.textContent = "";
+      Object.entries(pages).forEach(([name, page]) => {
+        page.section.inert = false;
+        page.typed.textContent = name === "about" ? "About" : page.title;
+        page.rest.textContent = "";
+      });
+      cv.inert = false;
+      cvFrame.src = cvFrame.dataset.src;
+
+      const skillArrows = ["skills-prev", "skills-next"].map((id) => document.getElementById(id));
+      document.querySelectorAll(".skill-group").forEach((group) => {
+        const panel = document.createElement("p");
+        panel.className = "m-desc";
+        panel.hidden = true;
+        group.appendChild(panel);
+        const skills = [...group.querySelectorAll(".skill")];
+        const clear = () => {
+          skills.forEach((item) => item.classList.remove("selected"));
+          panel.hidden = true;
+        };
+        skills.forEach((skill) => {
+          const toggle = () => {
+            const wasOpen = skill.classList.contains("selected");
+            clear();
+            if (wasOpen) return;
+            skill.classList.add("selected");
+            const name = document.createElement("b");
+            name.textContent = skill.querySelector("figcaption").textContent;
+            panel.textContent = "";
+            panel.append(name, document.createTextNode(skill.querySelector(".bubble").textContent));
+            panel.hidden = false;
+          };
+          skill.addEventListener("click", toggle);
+          skill.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggle();
+            }
+          });
+        });
+        skillArrows.forEach((arrow) => arrow.addEventListener("click", clear));
+      });
+
+      // Education: tap a photo to get the "go to Facebook page?" pop-up
+      const modal = document.getElementById("m-modal");
+      const schoolName = document.getElementById("m-school");
+      let pendingLink = "";
+      const closeModal = () => {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      };
+      document.querySelectorAll(".edu-photo").forEach((photo) => {
+        photo.addEventListener("click", (e) => {
+          e.preventDefault();
+          pendingLink = photo.href;
+          schoolName.textContent = photo.querySelector("img").alt;
+          modal.classList.add("open");
+          modal.setAttribute("aria-hidden", "false");
+        });
+      });
+      document.getElementById("m-yes").addEventListener("click", () => {
+        if (pendingLink) window.open(pendingLink, "_blank", "noopener");
+        closeModal();
+      });
+      document.getElementById("m-no").addEventListener("click", closeModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+      });
+    }
+
+    function goBack() {
+      if (view === "cv") closeCV();
+      else if (view === "page") closePage();
+      else closeMenu();
+    }
+
+    start.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (isMobile) {
+        pages.about.section.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+        return;
+      }
+      openMenu();
+    });
+
+    back.addEventListener("click", goBack);
+
+    items.forEach((item) => {
+      item.addEventListener("mouseenter", () => {
+        if (options.contains(document.activeElement)) document.activeElement.blur();
+      });
+    });
+
+    links.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const target = link.dataset.view;
+        if (!target) return;
+        e.preventDefault();
+        if (target === "cv") openCV();
+        else openPage(target);
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (isMobile) return;
+      if (view === "title") {
+        if (e.key === " " && !typing) {
+          e.preventDefault();
+          openMenu();
+        }
+        return;
+      }
+      if (view === "cv") {
+        if (e.key === "Escape") closeCV();
+        return;
+      }
+      if (view === "page") {
+        if (e.key === "Escape") closePage();
+        else if (carousels[currentPage] && e.key === "ArrowRight") carousels[currentPage].step(1);
+        else if (carousels[currentPage] && e.key === "ArrowLeft") carousels[currentPage].step(-1);
+        return;
+      }
+      const index = links.indexOf(document.activeElement);
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        links[index < 0 ? 0 : (index + 1) % links.length].focus({ preventScroll: true });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        links[index < 0 ? links.length - 1 : (index - 1 + links.length) % links.length].focus({ preventScroll: true });
+      } else if (e.key === "Escape") {
+        closeMenu();
+      }
+    });
+  </script>
+</body>
+
+</html>
