@@ -2131,9 +2131,11 @@ body:has(.cv.open) .back {
   }
 
   .cv-sheet {
-    width: calc(215 * var(--mu));
-    height: calc(var(--mu) * 215 / 0.7071);
-    aspect-ratio: auto;
+    width: calc(240 * var(--mu));
+    max-width: calc(100vw - 48 * var(--mu));
+    height: auto;
+    aspect-ratio: 0.7071;
+    overflow: hidden;
     border-width: calc(7 * var(--mu));
     box-shadow: none;
     opacity: 1;
@@ -2151,6 +2153,15 @@ body:has(.cv.open) .back {
     box-shadow: none;
     transform: none;
     transition: none;
+  }
+
+  .cv-canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #fff;
   }
 
   .cv-download,
@@ -3070,7 +3081,7 @@ body:has(.cv.open) .back {
         page.rest.textContent = "";
       });
       cv.inert = false;
-      cvFrame.src = cvFrame.dataset.src;
+      renderCvToFit();
 
       const skillArrows = ["skills-prev", "skills-next"].map((id) => document.getElementById(id));
       document.querySelectorAll(".skill-group").forEach((group) => {
@@ -3134,6 +3145,42 @@ body:has(.cv.open) .back {
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModal();
       });
+    }
+
+    // Mobile PDF viewers ignore zoom hints, so draw the first page onto a canvas
+    // sized to the frame. It always fits; the iframe is the fallback.
+    function renderCvToFit() {
+      const sheet = cv.querySelector(".cv-sheet");
+      const url = cvFrame.dataset.src.split("#")[0];
+      const useIframe = () => {
+        if (!cvFrame.getAttribute("src")) cvFrame.src = cvFrame.dataset.src;
+      };
+      const base = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+      const lib = document.createElement("script");
+      lib.src = base + "pdf.min.js";
+      lib.onerror = useIframe;
+      lib.onload = async () => {
+        try {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = base + "pdf.worker.min.js";
+          const pdf = await pdfjsLib.getDocument(url).promise;
+          const page = await pdf.getPage(1);
+          const natural = page.getViewport({ scale: 1 });
+          sheet.style.aspectRatio = natural.width + " / " + natural.height;
+          const ratio = Math.min(window.devicePixelRatio || 1, 3);
+          const scale = (sheet.clientWidth / natural.width) * ratio;
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement("canvas");
+          canvas.className = "cv-canvas";
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+          await page.render({ canvasContext: canvas.getContext("2d"), viewport }).promise;
+          sheet.appendChild(canvas);
+          cvFrame.style.display = "none";
+        } catch (err) {
+          useIframe();
+        }
+      };
+      document.head.appendChild(lib);
     }
 
     function goBack() {
