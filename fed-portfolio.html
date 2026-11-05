@@ -1755,7 +1755,10 @@ body:has(.cv.open) .back {
 
 /* ---------- Mobile-only elements (hidden on desktop) ---------- */
 .cv-title,
-.m-modal {
+.m-modal,
+.m-burger,
+.m-drawer,
+.m-scrim {
   display: none;
 }
 
@@ -1776,6 +1779,10 @@ body:has(.cv.open) .back {
 
   body {
     letter-spacing: 1px;
+  }
+
+  body.menu-open {
+    overflow: hidden;
   }
 
   body::before,
@@ -1799,6 +1806,152 @@ body:has(.cv.open) .back {
     width: 100%;
     aspect-ratio: auto;
     overflow: hidden;
+  }
+
+  /* ---- hamburger menu (left side) ---- */
+  .m-burger {
+    position: fixed;
+    top: calc(14 * var(--mu));
+    left: calc(14 * var(--mu));
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(5 * var(--mu));
+    width: calc(40 * var(--mu));
+    height: calc(40 * var(--mu));
+    padding: 0;
+    border: calc(2 * var(--mu)) solid #fff;
+    background: #000;
+    box-shadow: calc(3 * var(--mu)) calc(3 * var(--mu)) 0 var(--hard);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .m-burger span {
+    display: block;
+    width: calc(20 * var(--mu));
+    height: calc(3 * var(--mu));
+    background: #fff;
+    transition: transform 0.25s var(--ease), opacity 0.2s ease;
+  }
+
+  .m-burger.open span:nth-child(1) {
+    transform: translateY(calc(8 * var(--mu))) rotate(45deg);
+  }
+
+  .m-burger.open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .m-burger.open span:nth-child(3) {
+    transform: translateY(calc(-8 * var(--mu))) rotate(-45deg);
+  }
+
+  .m-burger:active {
+    transform: scale(0.94);
+  }
+
+  .m-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 44;
+    display: block;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+
+  .m-scrim.open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+  }
+
+  .m-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 45;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: min(calc(270 * var(--mu)), 78vw);
+    padding: calc(76 * var(--mu)) 0 calc(24 * var(--mu));
+    background: #000;
+    border-right: calc(3 * var(--mu)) solid #fff;
+    box-shadow: calc(8 * var(--mu)) 0 0 var(--hard);
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition: transform 0.35s var(--ease), visibility 0s linear 0.35s;
+    overflow-y: auto;
+  }
+
+  .m-drawer.open {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.35s var(--ease), visibility 0s;
+  }
+
+  .m-drawer ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .m-drawer a,
+  .m-drawer a * {
+    color: #fff;
+  }
+
+  .m-drawer a {
+    position: relative;
+    display: block;
+    padding: calc(15 * var(--mu)) calc(26 * var(--mu)) calc(15 * var(--mu)) calc(44 * var(--mu));
+    font-size: calc(22 * var(--mu));
+    font-weight: 500;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .m-drawer a::before {
+    content: "";
+    position: absolute;
+    left: calc(22 * var(--mu));
+    top: 50%;
+    width: calc(8 * var(--mu));
+    height: calc(8 * var(--mu));
+    margin-top: calc(-4 * var(--mu));
+    background: currentColor;
+    opacity: 0;
+    transform: translateX(calc(-6 * var(--mu)));
+    transition: opacity 0.15s ease, transform 0.15s steps(3, end);
+  }
+
+  .m-drawer a:hover,
+  .m-drawer a:focus-visible,
+  .m-drawer a:active,
+  .m-drawer a.current,
+  .m-drawer a:hover *,
+  .m-drawer a:focus-visible *,
+  .m-drawer a:active *,
+  .m-drawer a.current * {
+    color: #ff0000;
+    font-weight: 700;
+    outline: none;
+  }
+
+  .m-drawer a:hover::before,
+  .m-drawer a:focus-visible::before,
+  .m-drawer a:active::before,
+  .m-drawer a.current::before {
+    opacity: 1;
+    transform: none;
   }
 
   /* ---- hero ---- */
@@ -2679,6 +2832,22 @@ body:has(.cv.open) .back {
     </div>
   </div>
 
+  <!-- Mobile hamburger menu (only visible in the mobile layout) -->
+  <button class="m-burger" id="m-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="m-drawer">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="m-scrim" id="m-scrim"></div>
+  <nav class="m-drawer" id="m-drawer" aria-label="Main menu" inert>
+    <ul>
+      <li><a href="#home" data-target="home">Home</a></li>
+      <li><a href="#about" data-target="about">About</a></li>
+      <li><a href="#skills" data-target="skills">Skills</a></li>
+      <li><a href="#education" data-target="education">Education</a></li>
+      <li><a href="#projects" data-target="projects">Projects</a></li>
+      <li><a href="#cv" data-target="cv">Curriculum Vitae</a></li>
+    </ul>
+  </nav>
+
   <script>
     const frame = document.getElementById("frame");
     const intro = document.getElementById("intro");
@@ -3141,6 +3310,67 @@ body:has(.cv.open) .back {
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeModal();
       });
+
+      // ---- Hamburger menu (left side) ----
+      const burger = document.getElementById("m-burger");
+      const drawer = document.getElementById("m-drawer");
+      const scrim = document.getElementById("m-scrim");
+      const drawerLinks = [...drawer.querySelectorAll("a")];
+
+      const sectionFor = (target) =>
+        target === "home" ? null : target === "cv" ? cv : pages[target].section;
+
+      function setMenu(open) {
+        burger.classList.toggle("open", open);
+        burger.setAttribute("aria-expanded", String(open));
+        burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        drawer.classList.toggle("open", open);
+        scrim.classList.toggle("open", open);
+        drawer.inert = !open;
+        document.body.classList.toggle("menu-open", open);
+      }
+
+      burger.addEventListener("click", () => setMenu(!drawer.classList.contains("open")));
+      scrim.addEventListener("click", () => setMenu(false));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && drawer.classList.contains("open")) {
+          setMenu(false);
+          burger.focus();
+        }
+      });
+
+      drawerLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = link.dataset.target;
+          setMenu(false);
+          // let the scroll-lock release before scrolling
+          requestAnimationFrame(() => {
+            const behavior = reduceMotion ? "auto" : "smooth";
+            if (target === "home") window.scrollTo({ top: 0, behavior });
+            else sectionFor(target).scrollIntoView({ behavior, block: "start" });
+          });
+        });
+      });
+
+      // Highlight the section currently on screen
+      const spy = [
+        { target: "home", el: document.getElementById("intro") },
+        ...Object.keys(pages).map((name) => ({ target: name, el: pages[name].section })),
+        { target: "cv", el: cv }
+      ];
+      function updateCurrent() {
+        const line = window.scrollY + window.innerHeight * 0.35;
+        let active = "home";
+        spy.forEach((s) => {
+          const top = s.el.getBoundingClientRect().top + window.scrollY;
+          if (top <= line) active = s.target;
+        });
+        drawerLinks.forEach((l) => l.classList.toggle("current", l.dataset.target === active));
+      }
+      window.addEventListener("scroll", updateCurrent, { passive: true });
+      window.addEventListener("resize", updateCurrent);
+      updateCurrent();
     }
 
     // Mobile PDF viewers ignore zoom hints, so draw the first page onto a canvas
